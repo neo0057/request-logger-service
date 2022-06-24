@@ -5,4 +5,4 @@ server:
   port: 8080
 log:
   file:
-    full-path: C:/Users/ajeet/Desktop/request-counts.log
+    full-path: /home/ajeet/Documents/request-counts.log

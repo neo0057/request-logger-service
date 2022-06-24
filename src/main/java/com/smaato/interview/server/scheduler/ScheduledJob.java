@@ -44,17 +44,9 @@ public class ScheduledJob {
             logger.info("New Log File Created..");
         }
         LocalDateTime now = LocalDateTime.now();
-        int hour = now.getHour();
-        int minute = now.getMinute();
-        if (minute == 0) {
-            minute = 59;
-            hour--;
-        } else minute--;
-        final int finalHour = hour;
-        final int finalMinute = minute;
-        long start = System.currentTimeMillis();
+        final int hour = (now.getMinute() == 0) ? now.getHour() - 1 : now.getHour();
+        final int minute = (now.getMinute() == 0) ? 59 : now.getMinute() - 1;
         Iterable<Request> requestIterable = requestRepository.findAll();
-        long end = System.currentTimeMillis();
         List<Request> requestList = new ArrayList<>();
         Map<String, Boolean> requestMap = new HashMap<>();
         Map<String, Integer> requestCountMap = new TreeMap<>();
@@ -67,26 +59,29 @@ public class ScheduledJob {
                 requestCountMap.put(uniqueKey, requestCountMap.getOrDefault(uniqueKey, 0) + 1);
             }
         }
-        boolean noData = requestCountMap.size() == 0;
-        logger.info("time to fetch " + requestList.size() + " records from redis hashSet: " + (end - start) + " ms.");
+        boolean noData = (requestCountMap.size() == 0);
         StringBuilder fileContentToAdd = new StringBuilder();
         if (fileCreated) fileContentToAdd.append("hour:min").append("\t").append("request-count");
         for (String mapKey : requestCountMap.keySet()) {
             fileContentToAdd.append(System.lineSeparator()).append(mapKey).append("\t\t").append(requestCountMap.get(mapKey));
         }
-        String key = getFormatted(finalHour) + ":" + getFormatted(finalMinute);
+        String key = getFormatted(hour) + ":" + getFormatted(minute);
         if (noData) fileContentToAdd.append(System.lineSeparator()).append(key).append("\t\t").append(0);
         requestRepository.deleteAll(requestList);
-        FileWriter fileWriter = new FileWriter(logFile, true);
-        BufferedWriter bufferWriter = new BufferedWriter(fileWriter);
-        bufferWriter.write(fileContentToAdd.toString());
-        bufferWriter.close();
-        fileWriter.close();
+        addDataToFile(logFile, fileContentToAdd.toString());
         logger.info("request count added to log for time: " + key);
     }
 
     private String getFormatted(Integer n) {
         if (n > 9) return String.valueOf(n);
         return "0" + n;
+    }
+
+    private void addDataToFile(File logFile, String data) throws IOException {
+        FileWriter fileWriter = new FileWriter(logFile, true);
+        BufferedWriter bufferWriter = new BufferedWriter(fileWriter);
+        bufferWriter.write(data);
+        bufferWriter.close();
+        fileWriter.close();
     }
 }
