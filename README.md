@@ -10,6 +10,7 @@
 ## High Level Design
 
 <img src=high-level-design.png/>
+
 ### How to run
 1. #### software/dependency required
         1. JDK 17 version
