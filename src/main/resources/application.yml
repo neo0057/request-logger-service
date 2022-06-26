@@ -6,3 +6,8 @@ server:
 log:
   file:
     full-path: /home/ajeet/Documents/request-counts.log
+kafka:
+  bootstrapAddress: localhost:9092
+  topicName: requests
+  enabled: true
+  group: api-call-counts
