@@ -6,3 +6,5 @@ server:
 log:
   file:
     full-path: /home/ajeet/Documents/request-counts.log
+jobs:
+  enabled: true
