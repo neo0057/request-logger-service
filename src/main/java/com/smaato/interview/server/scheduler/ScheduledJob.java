@@ -17,7 +17,6 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class ScheduledJob {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduledJob.class);
@@ -69,7 +68,7 @@ public class ScheduledJob {
         if (noData) fileContentToAdd.append(System.lineSeparator()).append(key).append("\t\t").append(0);
         requestRepository.deleteAll(requestList);
         addDataToFile(logFile, fileContentToAdd.toString());
-        logger.info("request count added to log for time: " + key);
+        logger.info("request count added in log file for time: " + key);
     }
 
     private String getFormatted(Integer n) {

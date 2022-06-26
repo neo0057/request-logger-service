@@ -6,5 +6,8 @@ server:
 log:
   file:
     full-path: /home/ajeet/Documents/request-counts.log
-jobs:
-  enabled: true
+feature:
+  jobs:
+    enabled: true
+  http-post:
+    enabled: true
