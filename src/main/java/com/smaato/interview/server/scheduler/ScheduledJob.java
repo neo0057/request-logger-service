@@ -83,22 +83,22 @@ public class ScheduledJob {
         String key = getFormatted(hour) + ":" + getFormatted(minute);
         if (noData) fileContentToAdd.append(System.lineSeparator()).append(key).append("\t\t").append(0);
         requestRepository.deleteAll(requestList);
-        if (isKafkaEnabled) sendMessage(fileContentToAdd.toString());
-        else addDataToFile(logFile, fileContentToAdd.toString());
+        if (isKafkaEnabled) sendMessageToKafka(fileContentToAdd.toString());
+        else addRequestCountDataToLogFile(logFile, fileContentToAdd.toString());
         logger.info("request count added to log for time: " + key);
     }
 
-    public void sendMessage(String message) {
+    public void sendMessageToKafka(String message) {
         ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topicName, message);
         future.addCallback(new ListenableFutureCallback<>() {
             @Override
             public void onSuccess(SendResult<String, String> result) {
-                System.out.println("Sent message=[" + message + "] with offset=[" + result.getRecordMetadata().offset() + "]");
+                System.out.println("Message sent to kafka = [" + message.strip() + "] with offset=[" + result.getRecordMetadata().offset() + "]");
             }
 
             @Override
             public void onFailure(Throwable ex) {
-                System.out.println("Unable to send message=[" + message + "] due to : " + ex.getMessage());
+                System.out.println("Unable to send message=[" + message.strip() + "] due to : " + ex.getMessage());
             }
         });
     }
@@ -108,7 +108,7 @@ public class ScheduledJob {
         return "0" + n;
     }
 
-    private void addDataToFile(File logFile, String data) throws IOException {
+    private void addRequestCountDataToLogFile(File logFile, String data) throws IOException {
         FileWriter fileWriter = new FileWriter(logFile, true);
         BufferedWriter bufferWriter = new BufferedWriter(fileWriter);
         bufferWriter.write(data);
@@ -117,7 +117,7 @@ public class ScheduledJob {
     }
 
     @KafkaListener(topics = "${kafka.topicName}", groupId = "${kafka.group}")
-    public void listenGroupFoo(String message) {
-        System.out.println("Received Message in group " + groupId + " : " + message);
+    public void listenKafkaGroup(String message) {
+        System.out.println("Received Message in group " + groupId + " : " + message.strip());
     }
 }

@@ -26,6 +26,6 @@ public class AppController {
                       @RequestParam(value = "endpoint", required = false) String endpoint) {
         int status = appService.callEndpoint(endpoint);
         requestLogger.logRequestForId(id);
-        return (status == HttpStatus.OK.value()) ? "ok" : "failed";
+        return HttpStatus.valueOf(status).is2xxSuccessful() ? "ok" : "failed";
     }
 }
