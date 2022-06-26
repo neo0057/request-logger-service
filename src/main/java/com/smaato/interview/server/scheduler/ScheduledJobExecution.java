@@ -14,9 +14,9 @@ public class ScheduledJobExecution {
     private static final Logger logger = LoggerFactory.getLogger(ScheduledJobExecution.class);
 
     @Bean
-    @ConditionalOnProperty(value = "jobs.enabled", havingValue = "true")
+    @ConditionalOnProperty(value = "feature.jobs.enabled", havingValue = "true")
     public ScheduledJob scheduledJob() {
-        logger.info("job scheduled");
+        logger.info("jobs feature enabled");
         return new ScheduledJob();
     }
 }

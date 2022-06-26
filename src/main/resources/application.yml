@@ -11,3 +11,8 @@ kafka:
   topicName: requests
   enabled: true
   group: api-call-counts
+feature:
+  jobs:
+    enabled: true
+  http-post:
+    enabled: true
