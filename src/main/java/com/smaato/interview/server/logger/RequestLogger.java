@@ -19,9 +19,8 @@ public class RequestLogger {
     RequestRepository requestRepository;
 
     @Async
-    public void logRequestForId(Integer id) {
-        LocalDateTime now = LocalDateTime.now();
-        requestRepository.save(new Request(id, now.getHour(), now.getMinute()));
+    public void logRequestForId(Integer id, LocalDateTime localDateTime) {
+        requestRepository.save(new Request(id, localDateTime.getHour(), localDateTime.getMinute()));
         logger.info("request saved in redis cache");
     }
 }

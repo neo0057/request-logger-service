@@ -22,18 +22,20 @@ public class AppService {
     Boolean isHttpPostFeatureEnabled;
 
     public int callEndpoint(String endpoint) {
-        ResponseEntity<String> response = null;
-        if (endpoint != null && endpoint.strip().length() > 0) {
+        if (!endpoint.isBlank() && !endpoint.isEmpty()) {
             endpoint = endpoint.strip();
+            ResponseEntity<String> response;
             if (isHttpPostFeatureEnabled) {
+                logger.info("POST call enabled for endpoint param");
                 response = restTemplate.postForEntity(endpoint, new User("neo", "software developer"), String.class);
             } else {
+                logger.info("POST call not enabled for endpoint param");
                 response = restTemplate.getForEntity(endpoint, String.class);
             }
-            logger.info("endpoint response status code: " + response.getStatusCodeValue() + ", body: " + response.getBody());
-        } else {
-            logger.info("endpoint is empty");
+            logger.info("endpoint response status code: " + response.getStatusCodeValue());
+            return response.getStatusCodeValue();
         }
-        return (isHttpPostFeatureEnabled && response != null) ? response.getStatusCodeValue() : HttpStatus.OK.value();
+        logger.info("endpoint is empty, no http call");
+        return HttpStatus.OK.value();
     }
 }
