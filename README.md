@@ -20,9 +20,11 @@
 2. #### How to Run
 	- checkout the project `git clone https://github.com/neo0057/request-logger-service.git`
 	- build the project `mvn clean install`
+	- update `log.file.full-path` variable in application.yml file to valid path (Linux style absolute path with file name)
 	- #### Use command line to run
-		- `java -jar target/smaato-server-1.0.0.jar`
+		- `java -jar target/smaato-server-1.0.0.jar --<env-name>=<env-value>`
 		- by default server runs on 8080 port
+		- Optional - if you want to change log file location, pass `log.file.full-path` as argunment in commnad
 	- #### Use IntelliJ to run
 		- setup run configuration and select run as Application, select `ServerApplication.java` and run the project
 		- by default server runs on 8080 port
